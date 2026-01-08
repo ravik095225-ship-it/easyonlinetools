@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi Tool Suite - Age Calculator, Text Converter, Word Counter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        }
+
+        nav {
+            padding: 25px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            padding: 15px 30px;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+        }
+
+        nav a:hover, nav a.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .page {
+            display: none;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(15px);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #667eea;
+            margin-bottom: 30px;
+            text-align: center;
+            font-size: 2.5em;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .tool-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        /* Common Styles */
+        textarea, input, select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            margin-bottom: 20px;
+            background: white;
+        }
+
+        textarea:focus, input:focus, select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.2);
+        }
+
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 25px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(102, 126, 234, 0.3);
+        }
+
+        .result {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 25px;
+            border-radius: 15px;
+            margin-top: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin: 25px 0;
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+            
+            .page {
+                padding: 25px;
+            }
+            
+            h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <nav>
+                <ul>
+                    <li><a href="#" onclick="showPage('age-calculator')" class="nav-link active">Age Calculator</a></li>
+                    <li><a href="#" onclick="showPage('text-converter')" class="nav-link">Text Converter</a></li>
+                    <li><a href="#" onclick="showPage('word-counter')" class="nav-link">Word Counter</a></li>
+                </ul>
+            </nav>
+        </header>
+
+        <!-- Age Calculator Page -->
+        <div id="age-calculator" class="page active">
+            <div class="tool-container">
+                <h1>🎂 Age Calculator Tool</h1>
+                
+                <div style="text-align: center; margin-bottom: 40px;">
+                    <label for="birthDate" style="display: block; margin-bottom: 15px; font-size: 1.2em; font-weight: 600;">📅 Enter your birth date:</label>
+                    <input type="date" id="birthDate" style="max-width: 300px; margin: 0 auto 20px;">
+                    <button onclick="calculateAge()" style="display: block; margin: 0 auto;">🧮 Calculate Age</button>
+                </div>
+                
+                <div id="ageResult" class="result" style="display: none;">
+                    <h3>🎯 Age Calculation Results</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="years">0</div>
+                            <div>Years</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="months">0</div>
+                            <div>Months</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="days">0</div>
+                            <div>Days</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="hours">0</div>
+                            <div>Hours</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="minutes">0</div>
+                            <div>Minutes</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="seconds">0</div>
+                            <div>Seconds</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 25px; display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                        <div class="stat-card">
+                            <h4>🎉 Next Birthday</h4>
+                            <p id="nextBirthday">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>👶 Life Stage</h4>
+                            <p id="lifeStage">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>⭐ Zodiac Sign</h4>
+                            <p id="zodiacSign">-</p>
+                        </div>
+                        <div class="stat-card">
+                            <h4>🗓️ Birth Day</h4>
+                            <p id="birthDay">-</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Text Converter Page -->
+        <div id="text-converter" class="page">
+            <div class="tool-container">
+                <h1>🔄 Text Converter Tool</h1>
+                
+                <textarea id="textToConvert" placeholder="Enter your text here to convert case..." rows="8"></textarea>
+                
+                <div class="button-group">
+                    <button onclick="convertCase('upper')">🔤 UPPERCASE</button>
+                    <button onclick="convertCase('lower')">🔡 lowercase</button>
+                    <button onclick="convertCase('title')">🔠 Title Case</button>
+                    <button onclick="convertCase('sentence')">📝 Sentence case</button>
+                    <button onclick="convertCase('camel')">🐪 camelCase</button>
+                    <button onclick="convertCase('snake')">🐍 snake_case</button>
+                    <button onclick="convertCase('kebab')">🍢 kebab-case</button>
+                    <button onclick="convertCase('reverse')">🔄 ReVerSe CaSe</button>
+                    <button onclick="convertCase('alternate')">🔀 aLtErNaTe CaSe</button>
+                    <button onclick="convertCase('random')">🎲 Random Case</button>
+                    <button onclick="convertCase('binary')">🔢 Binary</button>
+                    <button onclick="convertCase('hex')">🔤 Hex</button>
+                </div>
+                
+                <textarea id="convertedText" placeholder="Converted text will appear here..." rows="8" readonly></textarea>
+                
+                <div style="text-align: center;">
+                    <button onclick="copyConvertedText()">📋 Copy Converted Text</button>
+                    <button onclick="downloadConvertedText()">⬇️ Download Text</button>
+                    <button onclick="clearConverter()">🗑️ Clear All</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Word Counter Page -->
+        <div id="word-counter" class="page">
+            <div class="tool-container">
+                <h1>📝 Word Counter Tool</h1>
+                
+                <textarea id="textInput" placeholder="Paste your text here to count words, characters, sentences, and paragraphs..." rows="10"></textarea>
+                
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <button onclick="countWords()">🔍 Count Words</button>
+                    <button onclick="clearText()">🗑️ Clear Text</button>
+                </div>
+                
+                <div id="wordCountResult" class="result" style="display: none;">
+                    <h3>📊 Text Statistics</h3>
+                    <div class="stats">
+                        <div class="stat-card">
+                            <div class="stat-number" id="wordCount">0</div>
+                            <div>Words</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="charCount">0</div>
+                            <div>Characters</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="charCountNoSpace">0</div>
+                            <div>Characters (no spaces)</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="sentenceCount">0</div>
+                            <div>Sentences</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="paragraphCount">0</div>
+                            <div>Paragraphs</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-number" id="readingTime">0</div>
+                            <div>Reading Time (min)</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Navigation functionality
+        function showPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            
+            document.getElementById(pageId).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        // Age Calculator Functions
+        function calculateAge() {
+            const birthDate = new Date(document.getElementById('birthDate').value);
+            const today = new Date();
+            
+            if (!birthDate || birthDate > today) {
+                alert('Please enter a valid birth date.');
+                return;
+            }
+            
+            const ageInMilliseconds = today - birthDate;
+            const ageInSeconds = Math.floor(ageInMilliseconds / 1000);
+            const ageInMinutes = Math.floor(ageInSeconds / 60);
+            const ageInHours = Math.floor(ageInMinutes / 60);
+            const ageInDays = Math.floor(ageInHours / 24);
+            const ageInMonths = Math.floor(ageInDays / 30.44);
+            const ageInYears = Math.floor(ageInDays / 365.25);
+            
+            document.getElementById('years').textContent = ageInYears;
+            document.getElementById('months').textContent = ageInMonths;
+            document.getElementById('days').textContent = ageInDays;
+            document.getElementById('hours').textContent = ageInHours;
+            document.getElementById('minutes').textContent = ageInMinutes;
+            document.getElementById('seconds').textContent = ageInSeconds;
+            
+            // Calculate next birthday
+            const nextBirthday = new Date(today.getFullYear(), birthDate.getMonth(), birthDate.getDate());
+            if (nextBirthday < today) {
+                nextBirthday.setFullYear(today.getFullYear() + 1);
+            }
+            const daysUntilBirthday = Math.ceil((nextBirthday - today) / (1000 * 60 * 60 * 24));
+            
+            document.getElementById('nextBirthday').textContent = `${daysUntilBirthday} days`;
+            
+            // Life stage
+            let lifeStage = '';
+            if (ageInYears < 13) lifeStage = 'Child';
+            else if (ageInYears < 20) lifeStage = 'Teenager';
+            else if (ageInYears < 30) lifeStage = 'Young Adult';
+            else if (ageInYears < 50) lifeStage = 'Adult';
+            else if (ageInYears < 65) lifeStage = 'Middle Age';
+            else lifeStage = 'Senior';
+            
+            document.getElementById('lifeStage').textContent = lifeStage;
+            
+            // Zodiac sign
+            const zodiacSign = getZodiacSign(birthDate.getMonth() + 1, birthDate.getDate());
+            document.getElementById('zodiacSign').textContent = zodiacSign;
+            
+            // Birth day of week
+            const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+            document.getElementById('birthDay').textContent = days[birthDate.getDay()];
+            
+            document.getElementById('ageResult').style.display = 'block';
+        }
+
+        function getZodiacSign(month, day) {
+            const zodiacSigns = [
+                'Capricorn', 'Aquarius', 'Pisces', 'Aries', 'Taurus', 'Gemini',
+                'Cancer', 'Leo', 'Virgo', 'Libra', 'Scorpio', 'Sagittarius'
+            ];
+            
+            const zodiacDates = [
+                [12, 22], [1, 20], [2, 19], [3, 21], [4, 20], [5, 21],
+                [6, 21], [7, 23], [8, 23], [9, 23], [10, 23], [11, 22]
+            ];
+            
+            for (let i = 0; i < zodiacDates.length; i++) {
+                const [zMonth, zDay] = zodiacDates[i];
+                if ((month === zMonth && day >= zDay) || (month === (zMonth % 12) + 1 && day < zDay)) {
+                    return zodiacSigns[i];
+                }
+            }
+            return zodiacSigns[0];
+        }
+
+        // Text Converter Functions
+        function convertCase(type) {
+            const text = document.getElementById('textToConvert').value;
+            if (!text) {
+                alert('Please enter some text to convert.');
+                return;
+            }
+            
+            let converted = '';
+            
+            switch(type) {
+                case 'upper':
+                    converted = text.toUpperCase();
+                    break;
+                case 'lower':
+                    converted = text.toLowerCase();
+                    break;
+                case 'title':
+                    converted = text.replace(/\w\S*/g, (txt) => 
+                        txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
+                    );
+                    break;
+                case 'sentence':
+                    converted = text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+                    break;
+                case 'camel':
+                    converted = text.replace(/(?:^\w|[A-Z]|\b\w)/g, (word, index) => 
+                        index === 0 ? word.toLowerCase() : word.toUpperCase()
+                    ).replace(/\s+/g, '');
+                    break;
+                case 'snake':
+                    converted = text.toLowerCase().replace(/\s+/g, '_');
+                    break;
+                case 'kebab':
+                    converted = text.toLowerCase().replace(/\s+/g, '-');
+                    break;
+                case 'reverse':
+                    converted = text.split('').map((char, index) => 
+                        index % 2 === 0 ? char.toLowerCase() : char.toUpperCase()
+                    ).join('');
+                    break;
+                case 'alternate':
+                    converted = text.split('').map((char, index) => 
+                        index % 2 === 0 ? char.toUpperCase() : char.toLowerCase()
+                    ).join('');
+                    break;
+                case 'random':
+                    converted = text.split('').map(char => 
+                        Math.random() > 0.5 ? char.toUpperCase() : char.toLowerCase()
+                    ).join('');
+                    break;
+                case 'binary':
+                    converted = text.split('').map(char => 
+                        char.charCodeAt(0).toString(2).padStart(8, '0')
+                    ).join(' ');
+                    break;
+                case 'hex':
+                    converted = text.split('').map(char => 
+                        char.charCodeAt(0).toString(16).padStart(2, '0')
+                    ).join(' ');
+                    break;
+            }
+            
+            document.getElementById('convertedText').value = converted;
+        }
+
+        function copyConvertedText() {
+            const convertedText = document.getElementById('convertedText');
+            if (!convertedText.value) {
+                alert('No converted text to copy.');
+                return;
+            }
+            convertedText.select();
+            document.execCommand('copy');
+            alert('Text copied to clipboard!');
+        }
+
+        function downloadConvertedText() {
+            const text = document.getElementById('convertedText').value;
+            if (!text) {
+                alert('No converted text to download.');
+                return;
+            }
+            
+            const blob = new Blob([text], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.download = 'converted_text.txt';
+            link.href = URL.createObjectURL(blob);
+            link.click();
+        }
+
+        function clearConverter() {
+            document.getElementById('textToConvert').value = '';
+            document.getElementById('convertedText').value = '';
+        }
+
+        // Word Counter Functions
+        function countWords() {
+            const text = document.getElementById('textInput').value;
+            
+            if (!text.trim()) {
+                alert('Please enter some text to count.');
+                return;
+            }
+            
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            const characters = text.length;
+            const charactersNoSpaces = text.replace(/\s/g, '').length;
+            const sentences = text.split(/[.!?]+/).filter(s => s.trim().length > 0).length;
+            const paragraphs = text.split(/\n\s*\n/).filter(p => p.trim().length > 0).length;
+            const readingTime = Math.ceil(words.length / 200);
+            
+            document.getElementById('wordCount').textContent = words.length;
+            document.getElementById('charCount').textContent = characters;
+            document.getElementById('charCountNoSpace').textContent = charactersNoSpaces;
+            document.getElementById('sentenceCount').textContent = sentences;
+            document.getElementById('paragraphCount').textContent = paragraphs;
+            document.getElementById('readingTime').textContent = readingTime;
+            
+            document.getElementById('wordCountResult').style.display = 'block';
+        }
+
+        function clearText() {
+            document.getElementById('textInput').value = '';
+            document.getElementById('wordCountResult').style.display = 'none';
+        }
+
+        // Set max date to today for age calculator
+        document.getElementById('birthDate').max = new Date().toISOString().split('T')[0];
+
+        // Real-time updates for word counter
+        document.getElementById('textInput').addEventListener('input', function() {
+            if (this.value.trim()) {
+                countWords();
+            } else {
+                document.getElementById('wordCountResult').style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
