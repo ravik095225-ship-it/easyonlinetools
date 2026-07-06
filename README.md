@@ -1,4 +1,4 @@
 ## live demo
-https://github.com/ravik095225-ship-it/easyonlinetools
+https://ravik095225-ship-it.github.io/easyonlinetools/
 
 # easyonlinetools
